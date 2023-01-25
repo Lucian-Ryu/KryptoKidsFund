@@ -8,14 +8,14 @@ contract KryptoKidsFund is ReentrancyGuard {
 
     
 
-    address father;
+    address parent;
 
     event KidAdded(address addr, string firstName, string lastName, uint releaseTime);
     event DepositToKidDone(address addr, uint amount);
     event KidWithdrawalComplete(address addr, uint balance);
 
     constructor() {
-        father = msg.sender;
+        parent = msg.sender;
     }
 
     mapping (address => Kid) public kidMapping;
@@ -28,18 +28,18 @@ contract KryptoKidsFund is ReentrancyGuard {
         uint balance;
     }
 
-    modifier onlyFather() {
-        require(msg.sender == father, "Only the father can add kids");
+    modifier onlyparent() {
+        require(msg.sender == parent, "Only the parent can add kids");
         _;
     }
 
-    function addKid(address payable _kidAddress, string memory firstName, string memory lastName, uint releaseTime) public onlyFather {
+    function addKid(address payable _kidAddress, string memory firstName, string memory lastName, uint releaseTime) public onlyparent {
         kidMapping[_kidAddress] = Kid(_kidAddress, firstName, lastName, releaseTime, 0);
 
         emit KidAdded(_kidAddress, firstName, lastName, releaseTime);
     }
 
-    function depositToKid(address payable _kidAddress) payable public onlyFather {
+    function depositToKid(address payable _kidAddress) payable public onlyparent {
         require(msg.value > 0, "amount should be greater than zero");
         kidMapping[_kidAddress].balance += msg.value;
 
